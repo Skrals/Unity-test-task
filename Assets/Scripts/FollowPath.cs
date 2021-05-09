@@ -7,10 +7,14 @@ public class FollowPath : MonoBehaviour
     public PathGeneration path;
     public float speed = 1;
     public float maxDistance = .1f;
+    public float pathTimerForward;
+    public float pathTimerBack;
+    [SerializeField]private bool timerSwitch;
 
     private IEnumerator<Transform> pointInPath;
     void Start()
     {
+        timerSwitch = false;
         if (path == null)
         {
             Debug.Log("Отсутствует путь");
@@ -30,9 +34,9 @@ public class FollowPath : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            pointInPath = path.GetNextPathPoint();
-            pointInPath.MoveNext();// следующая точка в пути
-            transform.position = pointInPath.Current.position;
+                pointInPath = path.GetNextPathPoint();
+                pointInPath.MoveNext();// следующая точка в пути
+                transform.position = pointInPath.Current.position;
         }
 
         if (pointInPath == null || pointInPath.Current == null)// проверка отсутсвия пути
@@ -46,7 +50,29 @@ public class FollowPath : MonoBehaviour
         {
             pointInPath.MoveNext();
         }
+        Timers();
 
         
+    }
+    private void Timers()
+    {
+        if (path.movementDirection> 0)
+        {
+            if (!timerSwitch)
+            {
+                pathTimerBack = 0;
+                timerSwitch = true;
+            }
+            pathTimerForward += Time.deltaTime;
+        }
+        else
+        {
+            if (timerSwitch)
+            {
+                pathTimerForward = 0;
+                timerSwitch = false;
+            }
+            pathTimerBack += Time.deltaTime;
+        }
     }
 }

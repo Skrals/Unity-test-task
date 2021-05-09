@@ -90,6 +90,10 @@ public class PathGeneration : MonoBehaviour
         {
             yield break;
         }
+        if( moveTo > pathElements.Length)
+        {
+            moveTo = 0;
+        }
         while (true)
         {
             yield return pathElements[moveTo];
