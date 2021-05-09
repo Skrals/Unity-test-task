@@ -13,15 +13,17 @@ public class PathGeneration : MonoBehaviour
     public int movementDirection = 1;
     public int moveTo = 0;
     public Transform[] pathElements;
+    [Header ("Объект точки")]
     public GameObject generationObject;
+    [Header("Минимум и максимум координат рандомизации")]
+    public int minRandomRange;
+    public int maxRandomRange;
 
-    [SerializeField] private int minRandomRange;
-    [SerializeField] private int maxRandomRange;
     private float randomPositionX;
     private float randomPositionY;
     private float randomPositionZ;
-    private bool genReady;
-    private int currentElementsNumber;
+    [SerializeField] private bool genReady;
+    [SerializeField] private int currentElementsNumber;
     private void Start()
     {
         currentElementsNumber = pathElements.Length;
@@ -49,6 +51,7 @@ public class PathGeneration : MonoBehaviour
             this.generationObject.transform.localPosition = newPosition;
             var element = Instantiate(generationObject, generationObject.transform.position, generationObject.transform.rotation);
             pathElements[i] = element.transform;
+            pathElements[i].SetParent(gameObject.transform);
         }
         currentElementsNumber = pathElements.Length;
     }
@@ -90,12 +93,10 @@ public class PathGeneration : MonoBehaviour
         while (true)
         {
             yield return pathElements[moveTo];
-
             if (pathElements.Length == 1)
             {
                 continue;
             }
-
             if (pathType == PathTypes.linear)
             {
                 if (moveTo <= 0)
