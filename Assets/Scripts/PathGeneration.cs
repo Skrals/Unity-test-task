@@ -4,15 +4,117 @@ using UnityEngine;
 
 public class PathGeneration : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public enum PathTypes
+    {
+        linear,
+        loop
+    }
+    public PathTypes pathType;
+    public int movementDirection = 1;
+    public int moveTo = 0;
+    public Transform[] pathElements;
+    public GameObject generationObject;
+
+    [SerializeField] private int minRandomRange;
+    [SerializeField] private int maxRandomRange;
+    private float randomPositionX;
+    private float randomPositionY;
+    private float randomPositionZ;
+    private bool genReady;
+    private void Start()
+    {
+        genReady = false;
+    }
+    private void Update()
     {
         
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Generation()
     {
-        
+        if (pathElements.Length >= 2)
+        {
+            for (int i = 0; i <= pathElements.Length-1; i++)
+            {
+                PointRandomization();
+                Vector3 newPosition = new Vector3(randomPositionX, randomPositionY, randomPositionZ);
+                this.generationObject.transform.localPosition = newPosition;
+                var element =  Instantiate(generationObject, generationObject.transform.position, generationObject.transform.rotation);
+                pathElements[i] = element.transform;
+            }
+        }
+    }
+    private void PointRandomization ()
+    {
+        randomPositionX = Random.Range(minRandomRange,maxRandomRange);
+        randomPositionY = Random.Range(minRandomRange, maxRandomRange);
+        randomPositionZ = Random.Range(minRandomRange, maxRandomRange);
+    }
+    private void Delete()
+    {
+
+    }
+
+    public void OnDrawGizmos()
+    {
+        if(pathElements == null || pathElements.Length <2)
+        {
+            return;
+        }
+        else
+        {
+            if (genReady == false)
+            {
+                genReady = true;
+                Generation();
+            }
+        }
+        for (var i = 1; i < pathElements.Length; i++)
+        {
+            Gizmos.DrawLine(pathElements[i - 1].position, pathElements[i].position);
+        }
+        if(pathType == PathTypes.loop)
+        {
+            Gizmos.DrawLine(pathElements[0].position, pathElements[pathElements.Length - 1].position);
+        }
+    }
+    public IEnumerator<Transform> GetNextPathPoint ()
+    {
+        if(pathElements == null || pathElements.Length <1)
+        {
+            yield break;
+        }
+        while(true)
+        {
+            yield return pathElements[moveTo];
+
+            if(pathElements.Length == 1)
+            {
+                continue;
+            }
+
+            if(pathType == PathTypes.linear)
+            {
+                if(moveTo <=0)
+                {
+                    movementDirection = 1;
+                }
+                else if( moveTo >= pathElements.Length -1)
+                {
+                    movementDirection = -1;
+                }
+            }
+            moveTo = moveTo + movementDirection;
+            if(pathType == PathTypes.loop)
+            {
+                if(moveTo >= pathElements.Length)
+                {
+                    moveTo = 0;
+                }
+                if(moveTo <0)
+                {
+                    moveTo = pathElements.Length - 1;
+                }
+            }
+        }
     }
 }
