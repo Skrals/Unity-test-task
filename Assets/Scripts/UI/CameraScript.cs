@@ -11,7 +11,7 @@ public class CameraScript : MonoBehaviour
     Ray ray;
     RaycastHit hit;
     public float limit = 80; // ограничение вращения по Y
-    public float zoom = 0.25f; // чувствительность при увеличении, колесиком мышки
+    public float zoom = 1; // чувствительность при увеличении, колесиком мышки
     public float zoomMax = 10; // макс. увеличение
     public float zoomMin = 3; // мин. увеличение
     public float MouseSense = 3; // чувствительность мышки

@@ -5,7 +5,7 @@ using UnityEngine;
 public class FollowPath : MonoBehaviour
 {
     public PathGeneration path;
-    public float speed = 1;
+    public float speed;
     public float maxDistance = .1f;
     public float pathTimerForward;
     public float pathTimerBack;
@@ -15,28 +15,21 @@ public class FollowPath : MonoBehaviour
     void Start()
     {
         timerSwitch = false;
-        if (path == null)
-        {
-            Debug.Log("Отсутствует путь");
-            return;
-        }
-        pointInPath = path.GetNextPathPoint();
-        pointInPath.MoveNext();// следующая точка в пути
-
-        if (pointInPath.Current == null)
-        {
-            Debug.Log("Нет точек");
-            return;
-        }
-        transform.position = pointInPath.Current.position;
     }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            try
+            {
                 pointInPath = path.GetNextPathPoint();
                 pointInPath.MoveNext();// следующая точка в пути
                 transform.position = pointInPath.Current.position;
+            }
+            catch
+            {
+                Debug.Log("Нет пути по которому можно следовать");
+            }
         }
 
         if (pointInPath == null || pointInPath.Current == null)// проверка отсутсвия пути

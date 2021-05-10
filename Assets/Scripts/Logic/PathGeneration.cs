@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 public class PathGeneration : MonoBehaviour
 {
@@ -18,12 +20,12 @@ public class PathGeneration : MonoBehaviour
     [Header("Минимум и максимум координат рандомизации")]
     public int minRandomRange;
     public int maxRandomRange;
-
     private float randomPositionX;
     private float randomPositionY;
     private float randomPositionZ;
     [SerializeField] private bool genReady;
     [SerializeField] private int currentElementsNumber;
+    [SerializeField] private InputField quantityField;
     private void Start()
     {
         currentElementsNumber = pathElements.Length;
@@ -42,6 +44,25 @@ public class PathGeneration : MonoBehaviour
             Generation();
         }
     }
+    public void PathT(Toggle toggle)
+    {
+        if(!toggle.isOn)
+        {
+            pathType = PathTypes.linear;
+        }
+        else
+        {
+            pathType = PathTypes.loop;
+        }
+    }
+    public void ElementsSize(int size)
+    {
+            size = Convert.ToInt32(quantityField.text);
+            pathElements = new Transform[size];
+            Start();
+            Delete();
+            Update();
+    }
     private void Generation()
     {
         for (int i = 0; i <= pathElements.Length - 1; i++)
@@ -57,9 +78,9 @@ public class PathGeneration : MonoBehaviour
     }
     private void PointRandomization()
     {
-        randomPositionX = Random.Range(minRandomRange, maxRandomRange);
-        randomPositionY = Random.Range(minRandomRange, maxRandomRange);
-        randomPositionZ = Random.Range(minRandomRange, maxRandomRange);
+        randomPositionX = UnityEngine.Random.Range(minRandomRange, maxRandomRange);
+        randomPositionY = UnityEngine.Random.Range(minRandomRange, maxRandomRange);
+        randomPositionZ = UnityEngine.Random.Range(minRandomRange, maxRandomRange);
     }
     private void Delete()
     {
