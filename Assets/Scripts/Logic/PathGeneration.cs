@@ -66,7 +66,7 @@ public class PathGeneration : MonoBehaviour
         genReady = true;
         load = true;
         savingData.GetComponent<Save>().LoadArray();
-        pathElements = savingData.GetComponent<Save>().sv.savingArray;
+        pathElements = savingData.GetComponent<Save>().tmp;
         currentElementsNumber = pathElements.Length;
         for (int i = 0; i <= pathElements.Length - 1; i++)
         { 
