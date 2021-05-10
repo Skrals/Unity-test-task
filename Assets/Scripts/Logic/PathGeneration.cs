@@ -11,6 +11,7 @@ public class PathGeneration : MonoBehaviour
         linear,
         loop
     }
+    public GameObject savingData;
     public PathTypes pathType;
     public int movementDirection = 1;
     public int moveTo = 0;
@@ -23,6 +24,7 @@ public class PathGeneration : MonoBehaviour
     private float randomPositionX;
     private float randomPositionY;
     private float randomPositionZ;
+    [SerializeField] bool load = false;
     [SerializeField] private bool genReady;
     [SerializeField] private int currentElementsNumber;
     [SerializeField] private InputField quantityField;
@@ -30,6 +32,10 @@ public class PathGeneration : MonoBehaviour
     {
         currentElementsNumber = pathElements.Length;
         genReady = false;
+        if(!load)
+        {
+            Load();
+        }
     }
     private void Update()
     {
@@ -55,6 +61,23 @@ public class PathGeneration : MonoBehaviour
             pathType = PathTypes.loop;
         }
     }
+    public void Load()
+    {
+        genReady = true;
+        load = true;
+        savingData.GetComponent<Save>().LoadArray();
+        pathElements = savingData.GetComponent<Save>().sv.savingArray;
+        currentElementsNumber = pathElements.Length;
+        for (int i = 0; i <= pathElements.Length - 1; i++)
+        { 
+            Vector3 newPosition = new Vector3(pathElements[i].position.x, pathElements[i].position.y, pathElements[i].position.z);
+            this.generationObject.transform.localPosition = newPosition;
+            var element = Instantiate(generationObject, generationObject.transform.position, generationObject.transform.rotation);
+            pathElements[i] = element.transform;
+            pathElements[i].SetParent(gameObject.transform);
+        }
+    }
+
     public void ElementsSize(int size)
     {
             size = Convert.ToInt32(quantityField.text);
