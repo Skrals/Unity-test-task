@@ -77,6 +77,7 @@ public class SaveData
     public List<TransfromSaver> transformDataList = new List<TransfromSaver>();
     public void SaveTransform(Transform[] savingArray)
     {
+        transformDataList.Clear();
          foreach( var s in savingArray)
         {
             Vector3 pos = new Vector3(s.transform.position.x, s.transform.position.y, s.transform.position.z);
