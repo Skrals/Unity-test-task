@@ -66,16 +66,9 @@ public class PathGeneration : MonoBehaviour
         genReady = true;
         load = true;
         savingData.GetComponent<Save>().LoadArray();
-        pathElements = savingData.GetComponent<Save>().tmp;
+        pathElements = new Transform[savingData.GetComponent<Save>().tmp.Length];
         currentElementsNumber = pathElements.Length;
-        for (int i = 0; i <= pathElements.Length - 1; i++)
-        { 
-            Vector3 newPosition = new Vector3(pathElements[i].position.x, pathElements[i].position.y, pathElements[i].position.z);
-            this.generationObject.transform.localPosition = newPosition;
-            var element = Instantiate(generationObject, generationObject.transform.position, generationObject.transform.rotation);
-            pathElements[i] = element.transform;
-            pathElements[i].SetParent(gameObject.transform);
-        }
+        pathElements = savingData.GetComponent<Save>().tmp;
     }
 
     public void ElementsSize(int size)

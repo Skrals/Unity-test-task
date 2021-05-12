@@ -44,8 +44,6 @@ public class FollowPath : MonoBehaviour
             pointInPath.MoveNext();
         }
         Timers();
-
-        
     }
     private void Timers()
     {

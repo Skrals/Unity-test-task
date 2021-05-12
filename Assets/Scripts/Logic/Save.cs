@@ -8,6 +8,7 @@ using System.IO;
 public class Save : MonoBehaviour
 {
     public GameObject pathArray;
+    public GameObject generationObject;
     public Transform[] tmp;
     public SaveData sv = new SaveData();
     public List<Vector3> vectors = new List<Vector3>();
@@ -15,7 +16,6 @@ public class Save : MonoBehaviour
     private void Start()
     {
         filePath = Path.Combine(Application.dataPath, "save.txt");
-        tmp = new Transform[sv.transformDataList.Count];
     }
     public void LoadArray()
     {
@@ -31,12 +31,15 @@ public class Save : MonoBehaviour
     public void ConvertVectorsToTransform()
     {
         float x, y, z;
+        tmp = new Transform[sv.transformDataList.Count];
         for (int i = 0; i <= sv.transformDataList.Count-1;i++ )
         {
             x = sv.transformDataList[i].position.x;
             y = sv.transformDataList[i].position.y;
             z = sv.transformDataList[i].position.z;
-            tmp[i].transform.position.Set(x, y, z);
+            var element = Instantiate(generationObject, new Vector3(x, y, z), generationObject.transform.rotation);
+            tmp[i] = element.transform;
+            tmp [i].SetParent(pathArray.transform);
         }
     }
     public void SaveArray()
